@@ -1,6 +1,7 @@
 package ru.sas7.congratulator.backendspringboot.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.sas7.congratulator.backendspringboot.entity.Contact;

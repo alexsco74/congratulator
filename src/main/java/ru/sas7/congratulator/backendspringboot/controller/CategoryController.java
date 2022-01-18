@@ -1,8 +1,6 @@
 package ru.sas7.congratulator.backendspringboot.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.sas7.congratulator.backendspringboot.entity.Category;
 import ru.sas7.congratulator.backendspringboot.repo.CategoryRepository;
 
@@ -19,9 +17,15 @@ public class CategoryController {
     }
 
     @GetMapping("")
-    public List<Category> test() {
+    public List<Category> getCategories() {
         List<Category> list = categoryRepository.findAll();
         System.out.println("List = " + list);
         return list;
+    }
+
+
+    @PostMapping("/add")
+    public Category addCategory(@RequestBody Category category) {
+        return categoryRepository.save(category);
     }
 }
