@@ -27,11 +27,27 @@ public class CategoryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> add(@RequestBody Category category) {
 
         // Проверяем чтобы не было id
         if (category.getId() != null && category.getId() != 0) {
             return new ResponseEntity("Неверный параметр: в объекте не должно быть параметра id", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        // Проверяем чтобы было name
+        if (category.getName() == null || category.getName().trim().length() == 0) {
+            return new ResponseEntity("Неверный параметр: name обязательный параметр", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(categoryRepository.save(category));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Category> update(@RequestBody Category category) {
+
+        // Проверяем чтобы было id
+        if (category.getId() == null || category.getId() == 0) {
+            return new ResponseEntity("Неверный параметр: id обязательный параметр", HttpStatus.NOT_ACCEPTABLE);
         }
 
         // Проверяем чтобы было name
