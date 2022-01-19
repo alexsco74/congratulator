@@ -20,7 +20,7 @@ public class ContactController {
     }
 
     @GetMapping("")
-    public List<Contact> test() {
+    public List<Contact> getContact() {
         List<Contact> list = contactRepository.findAll();
         System.out.println("List = " + list);
         return list;
