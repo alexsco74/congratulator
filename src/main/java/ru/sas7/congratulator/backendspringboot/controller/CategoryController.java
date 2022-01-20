@@ -23,7 +23,7 @@ public class CategoryController {
 
     @GetMapping("")
     public List<Category> getCategories() {
-        List<Category> list = categoryRepository.findAll();
+        List<Category> list = categoryRepository.findAllByOrderByNameAsc();
         System.out.println("List = " + list);
         return list;
     }
@@ -75,7 +75,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable int id) {
+    public ResponseEntity deleteById(@PathVariable int id) {
 
         try {
             categoryRepository.deleteById(id);
@@ -84,6 +84,6 @@ public class CategoryController {
             return new ResponseEntity("Категория с id: " + id + " не найдена.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok("Удалена категория c id: " + id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
