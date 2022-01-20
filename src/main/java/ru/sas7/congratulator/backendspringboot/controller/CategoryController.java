@@ -1,5 +1,6 @@
 package ru.sas7.congratulator.backendspringboot.controller;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import ru.sas7.congratulator.backendspringboot.entity.Category;
 import ru.sas7.congratulator.backendspringboot.repo.CategoryRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/category")
@@ -56,5 +58,32 @@ public class CategoryController {
         }
 
         return ResponseEntity.ok(categoryRepository.save(category));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> findById(@PathVariable int id) {
+        Category category;
+
+        try {
+            category = categoryRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return new ResponseEntity("Категория с id: " + id + " не найдена", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(category);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable int id) {
+
+        try {
+            categoryRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            e.printStackTrace();
+            return new ResponseEntity("Категория с id: " + id + " не найдена.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok("Удалена категория c id: " + id);
     }
 }
