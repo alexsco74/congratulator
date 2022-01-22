@@ -90,7 +90,7 @@ public class CategoryController {
 
     // Поиск по параметрам
     @GetMapping("/search")
-    public ResponseEntity<List<Category>> find(@RequestBody CategorySearchParams categorySearchParams) {
-        return ResponseEntity.ok(categoryRepository.findByName(categorySearchParams.getName()));
+    public ResponseEntity<List<Category>> findByParams(@RequestBody CategorySearchParams categorySearchParams) {
+        return ResponseEntity.ok(categoryRepository.findByParams(categorySearchParams.getName()));
     }
 }
