@@ -1,27 +1,29 @@
 package ru.sas7.congratulator.backendspringboot.controller;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.sas7.congratulator.backendspringboot.entity.Category;
-import ru.sas7.congratulator.backendspringboot.repo.CategoryRepository;
+import ru.sas7.congratulator.backendspringboot.search.CategorySearchParams;
+import ru.sas7.congratulator.backendspringboot.service.CategoryService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
-    public CategoryController(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
     @GetMapping("")
     public List<Category> getCategories() {
-        List<Category> list = categoryRepository.findAll();
+        List<Category> list = categoryService.getCategories();
         System.out.println("List = " + list);
         return list;
     }
@@ -39,7 +41,7 @@ public class CategoryController {
             return new ResponseEntity("Неверный параметр: name обязательный параметр", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(categoryRepository.save(category));
+        return ResponseEntity.ok(categoryService.add(category));
     }
 
     @PutMapping("/update")
@@ -55,6 +57,39 @@ public class CategoryController {
             return new ResponseEntity("Неверный параметр: name обязательный параметр", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(categoryRepository.save(category));
+        return ResponseEntity.ok(categoryService.update(category));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> findById(@PathVariable int id) {
+        Category category;
+
+        try {
+            category = categoryService.findById(id);
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return new ResponseEntity("Категория с id: " + id + " не найдена", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return ResponseEntity.ok(category);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity deleteById(@PathVariable int id) {
+
+        try {
+            categoryService.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            e.printStackTrace();
+            return new ResponseEntity("Категория с id: " + id + " не найдена.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    // Поиск по параметрам
+    @GetMapping("/search")
+    public ResponseEntity<List<Category>> findByParams(@RequestBody CategorySearchParams categorySearchParams) {
+        return ResponseEntity.ok(categoryService.findByParams(categorySearchParams.getName()));
     }
 }
