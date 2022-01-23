@@ -3,15 +3,13 @@ package ru.sas7.congratulator.backendspringboot.controller;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.sas7.congratulator.backendspringboot.entity.Contact;
-import ru.sas7.congratulator.backendspringboot.repo.ContactRepository;
 import ru.sas7.congratulator.backendspringboot.request.UpcomingBirthdaysParams;
 import ru.sas7.congratulator.backendspringboot.search.ContactSearchParams;
+import ru.sas7.congratulator.backendspringboot.service.ContactService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,10 +20,10 @@ import java.util.NoSuchElementException;
 @RequestMapping("/contact")
 public class ContactController {
 
-    private ContactRepository contactRepository;
+    private ContactService contactService;
 
-    public ContactController(ContactRepository contactRepository) {
-        this.contactRepository = contactRepository;
+    public ContactController(ContactService contactService) {
+        this.contactService = contactService;
     }
 
     private List<String> checkRequiredProperties(Contact contact) {
@@ -57,7 +55,7 @@ public class ContactController {
 
     @GetMapping("")
     public List<Contact> getContact() {
-        List<Contact> list = contactRepository.findAllByOrderByLastNameAsc();
+        List<Contact> list = contactService.findAllByOrderByLastNameAsc();
         return list;
     }
 
@@ -76,7 +74,7 @@ public class ContactController {
             return new ResponseEntity(String.join("\n", emptyPropertyMessages), HttpStatus.NOT_ACCEPTABLE);
         }
 
-        return ResponseEntity.ok(contactRepository.save(contact));
+        return ResponseEntity.ok(contactService.add(contact));
     }
 
     // Получение контакта
@@ -86,7 +84,7 @@ public class ContactController {
         Contact contact = null;
 
         try {
-            contact = contactRepository.findById(id).get();
+            contact = contactService.findById(id);
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return new ResponseEntity("Контакт с id: " + id + " не найден", HttpStatus.NOT_ACCEPTABLE);
@@ -109,7 +107,7 @@ public class ContactController {
             return new ResponseEntity(String.join("\n", emptyPropertyMessages), HttpStatus.NOT_ACCEPTABLE);
         }
 
-        contactRepository.save(contact);
+        contactService.update(contact);
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -117,7 +115,7 @@ public class ContactController {
     public ResponseEntity deleteById(@PathVariable int id) {
 
         try {
-            contactRepository.deleteById(id);
+            contactService.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
             e.printStackTrace();
             return new ResponseEntity("Категория с id: " + id + " не найдена.", HttpStatus.NOT_ACCEPTABLE);
@@ -129,12 +127,7 @@ public class ContactController {
     // Поиск по параметрам
     @GetMapping("/search")
     public ResponseEntity<List<Contact>> findByParams(@RequestBody ContactSearchParams contactSearchParams) {
-
-        return ResponseEntity.ok(contactRepository.findByParams(contactSearchParams.getFirstName(),
-                contactSearchParams.getMiddleName(),
-                contactSearchParams.getLastName(),
-                contactSearchParams.getCategoryId()
-        ));
+        return ResponseEntity.ok(contactService.findByParams(contactSearchParams));
     }
 
     // Получить ближайшие дни рождения
@@ -154,7 +147,7 @@ public class ContactController {
                 upcomingBirthdaysParams.getPageSize()
         );
 
-        Page pageResponse = contactRepository.findUpcomingBirthdays(nowDate, pageRequest);
+        Page<Contact> pageResponse = contactService.findUpcomingBirthdays(nowDate, pageRequest);
         return ResponseEntity.ok(pageResponse);
     }
 
