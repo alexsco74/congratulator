@@ -1,11 +1,16 @@
 package ru.sas7.congratulator.backendspringboot.controller;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.sas7.congratulator.backendspringboot.entity.Contact;
 import ru.sas7.congratulator.backendspringboot.repo.ContactRepository;
+import ru.sas7.congratulator.backendspringboot.request.UpcomingBirthdaysParams;
 import ru.sas7.congratulator.backendspringboot.search.ContactSearchParams;
 
 import java.time.LocalDate;
@@ -132,16 +137,25 @@ public class ContactController {
         ));
     }
 
+    // Получить ближайшие дни рождения
+
     /**
-     * Получить ближайшие дни рождения
+     * Получить ближайшие дни рождения постранично
      *
-     * @param date String - строка даты в формате yyyy-MM-dd
-     * @return список контактов
+     * @param upcomingBirthdaysParams
+     * @return страница контактов
      */
-    @GetMapping("/upcoming-birthdays/{date}")
-    public ResponseEntity<List<Contact>> findUpcomingBirthdays(@PathVariable String date) {
-        LocalDate nowDate = LocalDate.parse(date);
-        return ResponseEntity.ok(contactRepository.findUpcomingBirthdays(nowDate));
+    @GetMapping("/upcoming-birthdays")
+    public ResponseEntity<Page<Contact>>
+    findUpcomingBirthdays(@RequestBody UpcomingBirthdaysParams upcomingBirthdaysParams) {
+        LocalDate nowDate = LocalDate.parse(upcomingBirthdaysParams.getFromDate());
+
+        PageRequest pageRequest = PageRequest.of(upcomingBirthdaysParams.getPageIndex(),
+                upcomingBirthdaysParams.getPageSize()
+        );
+
+        Page pageResponse = contactRepository.findUpcomingBirthdays(nowDate, pageRequest);
+        return ResponseEntity.ok(pageResponse);
     }
 
 }

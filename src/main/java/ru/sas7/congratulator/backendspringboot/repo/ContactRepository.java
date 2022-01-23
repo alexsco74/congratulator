@@ -1,5 +1,7 @@
 package ru.sas7.congratulator.backendspringboot.repo;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,12 +28,14 @@ public interface ContactRepository extends JpaRepository<Contact, Integer> {
                                @Param("lastName") String lastName,
                                @Param("categoryId") Integer categoryId);
 
+    // Получить ближайшие дни рождения постронично
     @Query("SELECT n FROM Contact n WHERE" +
             " (month(n.birthday) = month(:nowDate) AND day(n.birthday) >= day(:nowDate))" +
             " OR (month(n.birthday) > month(:nowDate))" +
             " ORDER BY month(n.birthday), day(n.birthday)")
-    List<Contact> findUpcomingBirthdays(@Param("nowDate") LocalDate nowDate);
+    Page<Contact> findUpcomingBirthdays(@Param("nowDate") LocalDate nowDate,
+                                        Pageable pageable);
 
-    // Метод для получения списка контактов с сортировкой дню рождения
+    // Получить список контактов с сортировкой по дню рождения
     List<Contact> findAllByOrderByLastNameAsc();
 }
