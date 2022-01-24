@@ -18,6 +18,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/contact")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ContactController {
 
     private ContactService contactService;
