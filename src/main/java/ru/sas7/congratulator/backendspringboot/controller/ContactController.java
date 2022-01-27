@@ -126,7 +126,7 @@ public class ContactController {
     }
 
     // Поиск по параметрам
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<Contact>> findByParams(@RequestBody ContactSearchParams contactSearchParams) {
         return ResponseEntity.ok(contactService.findByParams(contactSearchParams));
     }
@@ -139,7 +139,7 @@ public class ContactController {
      * @param upcomingBirthdaysParams
      * @return страница контактов
      */
-    @GetMapping("/upcoming-birthdays")
+    @PostMapping("/upcoming-birthdays")
     public ResponseEntity<Page<Contact>>
     findUpcomingBirthdays(@RequestBody UpcomingBirthdaysParams upcomingBirthdaysParams) {
         LocalDate nowDate = LocalDate.parse(upcomingBirthdaysParams.getFromDate());
