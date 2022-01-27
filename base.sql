@@ -27,7 +27,7 @@ CREATE TABLE `category` (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,6 +36,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
+INSERT INTO `category` VALUES (9,'Друзья'),(2,'Знакомые'),(3,'Сотрудники');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -48,12 +49,12 @@ DROP TABLE IF EXISTS `contact`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `contact` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Идер',
-  `first_name` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT 'Имя',
-  `last_name` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT 'Фамилия',
-  `middle_name` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT 'Отчество',
+  `first_name` varchar(255) NOT NULL COMMENT 'Имя',
+  `last_name` varchar(255) NOT NULL COMMENT 'Фамилия',
+  `middle_name` varchar(255) NOT NULL COMMENT 'Отчество',
   `birthday` datetime NOT NULL COMMENT 'День рождения',
   `category_id` int(10) unsigned DEFAULT NULL COMMENT 'Идер категории',
-  `photo` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT 'Фотография',
+  `photo` varchar(255) DEFAULT '' COMMENT 'Фотография',
   PRIMARY KEY (`id`),
   KEY `first_name` (`first_name`),
   KEY `birthday` (`birthday`),
@@ -61,7 +62,7 @@ CREATE TABLE `contact` (
   KEY `last_name` (`last_name`) USING BTREE,
   KEY `middle_name` (`middle_name`) USING BTREE,
   CONSTRAINT `fk_category` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +71,7 @@ CREATE TABLE `contact` (
 
 LOCK TABLES `contact` WRITE;
 /*!40000 ALTER TABLE `contact` DISABLE KEYS */;
-INSERT INTO `contact` VALUES (1,'Имя 1','Фамилия 1','Отчество 1','1997-12-31 00:00:00',NULL,'');
+INSERT INTO `contact` VALUES (1,'Петров','Петр','Петрович','1900-11-11 00:00:00',NULL,NULL),(4,'Иванов','Иван','Иванович','1901-10-10 00:00:00',NULL,NULL),(12,'Имя 2','Фамилия 2','Отчество 3','1993-01-01 00:00:00',2,NULL),(13,'Сидр','Сидоров','Сидорович','1991-03-03 00:00:00',2,NULL);
 /*!40000 ALTER TABLE `contact` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -83,4 +84,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-16 12:13:29
+-- Dump completed on 2022-01-27 23:24:50
