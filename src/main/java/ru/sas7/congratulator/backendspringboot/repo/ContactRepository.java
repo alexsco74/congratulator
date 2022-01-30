@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.sas7.congratulator.backendspringboot.entity.Contact;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -30,10 +31,12 @@ public interface ContactRepository extends JpaRepository<Contact, Integer> {
 
     // Получить ближайшие дни рождения постронично
     @Query("SELECT n FROM Contact n WHERE" +
-            " (month(n.birthday) = month(:nowDate) AND day(n.birthday) >= day(:nowDate))" +
-            " OR (month(n.birthday) > month(:nowDate))" +
+            " (:categoryId is null OR n.category.id=:categoryId)" +
+            " AND ((month(n.birthday) = month(:nowDate) AND day(n.birthday) >= day(:nowDate))" +
+            " OR (month(n.birthday) > month(:nowDate)))" +
             " ORDER BY month(n.birthday), day(n.birthday)")
     Page<Contact> findUpcomingBirthdays(@Param("nowDate") LocalDate nowDate,
+                                        @Param("categoryId") Integer categoryId,
                                         Pageable pageable);
 
     // Получить список контактов с сортировкой по дню рождения

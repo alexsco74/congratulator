@@ -148,7 +148,7 @@ public class ContactController {
                 upcomingBirthdaysParams.getPageSize()
         );
 
-        Page<Contact> pageResponse = contactService.findUpcomingBirthdays(nowDate, pageRequest);
+        Page<Contact> pageResponse = contactService.findUpcomingBirthdays(nowDate, upcomingBirthdaysParams.getCategoryId(), pageRequest);
         return ResponseEntity.ok(pageResponse);
     }
 

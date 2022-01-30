@@ -49,7 +49,7 @@ public class ContactService {
         );
     }
 
-    public Page<Contact> findUpcomingBirthdays(LocalDate nowDate, PageRequest pageRequest) {
-     return contactRepository.findUpcomingBirthdays(nowDate, pageRequest);
+    public Page<Contact> findUpcomingBirthdays(LocalDate nowDate, Integer categoryId, PageRequest pageRequest) {
+     return contactRepository.findUpcomingBirthdays(nowDate, categoryId, pageRequest);
     }
 }

@@ -14,7 +14,7 @@ public class UpcomingBirthdaysParams {
 
     // Дата с которой получаем ближайшие дни рождения
     private String fromDate;
-
+    private Integer categoryId;
     private Integer pageIndex;
     private Integer pageSize;
 }
