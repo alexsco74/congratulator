@@ -27,7 +27,7 @@ CREATE TABLE `category` (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -62,7 +62,7 @@ CREATE TABLE `contact` (
   KEY `last_name` (`last_name`) USING BTREE,
   KEY `middle_name` (`middle_name`) USING BTREE,
   CONSTRAINT `fk_category` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `contact` (
 
 LOCK TABLES `contact` WRITE;
 /*!40000 ALTER TABLE `contact` DISABLE KEYS */;
-INSERT INTO `contact` VALUES (1,'Петров','Петр','Петрович','1900-11-11 00:00:00',NULL,NULL),(4,'Иванов','Иван','Иванович','1901-10-10 00:00:00',NULL,NULL),(12,'Имя 2','Фамилия 2','Отчество 3','1993-01-01 00:00:00',2,NULL),(13,'Сидр','Сидоров','Сидорович','1991-03-03 00:00:00',2,NULL);
+INSERT INTO `contact` VALUES (1,'Петров','Петр','Петрович','1900-11-11 00:00:00',NULL,NULL),(4,'Иванов','Фамилия 5','Иванович','1901-10-10 00:00:00',2,NULL),(12,'Имя 2','Фамилия 2','Отчество 3','1993-01-01 00:00:00',2,NULL),(14,'Имя 1','фамилия 1','Отчество 1','1990-04-04 00:00:00',3,''),(15,'Имя 2','фамилия 2','Отчество 2','1990-06-06 00:00:00',NULL,''),(16,'Имя 3','фамилия 3','Отчество 3','1990-07-08 00:00:00',NULL,''),(17,'Имя 4','фамилия 4','Отчество 4','1990-08-01 00:00:00',NULL,''),(18,'Имя 1','Afv 1','Отч 1','2022-01-02 21:00:00',NULL,NULL),(19,'йцукйцу','йцукйц','йцукйцу','2022-01-30 21:00:00',9,NULL),(20,'3у123у','12у2','123у213','2022-01-30 21:00:00',3,NULL),(21,'3у123у','qwe','wqefw','2022-01-30 21:00:00',NULL,NULL),(22,'Имя 6','Фамилия 6','Отчество 6','2022-05-19 21:00:00',3,NULL);
 /*!40000 ALTER TABLE `contact` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -84,4 +84,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-27 23:24:50
+-- Dump completed on 2022-01-31 22:29:04
