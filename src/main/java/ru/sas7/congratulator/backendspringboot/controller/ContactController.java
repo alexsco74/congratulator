@@ -6,11 +6,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.sas7.congratulator.backendspringboot.entity.Contact;
 import ru.sas7.congratulator.backendspringboot.request.UpcomingBirthdaysParams;
+import ru.sas7.congratulator.backendspringboot.response.UploadFile;
 import ru.sas7.congratulator.backendspringboot.search.ContactSearchParams;
 import ru.sas7.congratulator.backendspringboot.service.ContactService;
+import ru.sas7.congratulator.backendspringboot.service.FileService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +27,12 @@ public class ContactController {
 
     private ContactService contactService;
 
-    public ContactController(ContactService contactService) {
+    private final FileService fileService;
+
+    public ContactController(ContactService contactService,
+                             FileService fileService) {
         this.contactService = contactService;
+        this.fileService = fileService;
     }
 
     private List<String> checkRequiredProperties(Contact contact) {
@@ -150,6 +158,21 @@ public class ContactController {
 
         Page<Contact> pageResponse = contactService.findUpcomingBirthdays(nowDate, upcomingBirthdaysParams.getCategoryId(), pageRequest);
         return ResponseEntity.ok(pageResponse);
+    }
+
+    @PostMapping("/api/files")
+    public ResponseEntity<UploadFile> uploadFile(@RequestParam MultipartFile file) throws IOException {
+        String path;
+        String url;
+        try {
+            fileService.storeFile(file);
+            path = file.getOriginalFilename();
+        } catch (IOException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        UploadFile uploadFileResponse = new UploadFile(path);
+        return new ResponseEntity(uploadFileResponse, HttpStatus.OK);
     }
 
 }

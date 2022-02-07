@@ -12,6 +12,7 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode
 public class Contact {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
